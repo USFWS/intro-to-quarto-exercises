@@ -10,15 +10,14 @@ This repository contains various exercises and examples that will guide students
 
 ## Getting started
 
-## Prework
-
 -   From FWS Apps-To-Go, install:
     -   R 4.4.2
     -   RStudio 2024.09.1
 -   Install R package dependencies:
 
 ``` r
-required_packages <- c("tidyverse", "knitr", "readxl", "sf", "gt", "ggrepel", "magrittr", "quarto", "usethis")
+required_packages <- c("tidyverse", "knitr", "readxl", "sf", "gt", "ggrepel", 
+                        "magrittr", "quarto", "usethis")
 
 new_packages <- packages[!(required_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
