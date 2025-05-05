@@ -1,10 +1,7 @@
 ---
-title: "Help"
-author: "Your Name"
-Date: 
 format: 
   docx:
-   reference-doc: MS_Style.docx
+   reference-doc: ./templates/MS_Style.docx
 execute: 
   echo: false
   warning: false
@@ -43,13 +40,13 @@ ipak(requiredPackages)
 
 # Read excel data from the Projects "Data" folder. 
 
-data <- read_excel("../Data/Western_Snowy_Plover_Window_Survey_dataset.xlsx") %>% # Read in our downloaded plover dataset.
+data <- read_excel("./data/Western_Snowy_Plover_Window_Survey_dataset.xlsx") %>% # Read in our downloaded plover dataset.
   filter(Site == params$Site) # Filter dataset by survey site
 head(data) # Show the first few rows of data.
 
 # Read shapefile data from the Projects "Data" folder. 
 
-boundary_sf <- st_read(dsn = "../Data/us-state-boundaries")
+boundary_sf <- st_read(dsn = "./data/us-state-boundaries")
 ```
 
 ## U.S. Fish and Wildlife Service
@@ -70,13 +67,13 @@ Annual observation surveys are essential for informing management strategies aim
 
 ##### Methods
 
-The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast (figure 1). This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
+The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast (@fig-site_map). This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
 
 Observations were conducted during both summer and winter seasons to gather comprehensive information on the breeding and migratory populations of western snowy plovers at the survey sites. During the summer months, surveys focused on identifying nesting sites and assessing breeding success, while winter surveys aimed to document the abundance and distribution of migratory plovers that utilize these coastal environments.
 
 ```{r}
-#| label: Survey Site Map
-#| fig-cap: !expr paste0("Figure 1. Map of Western Snowy Plover survey locations at the ", params$Site, " survey location.")
+#| label: fig-site_map
+#| fig-cap: !expr paste0("Map of Western Snowy Plover survey locations at the ", params$Site, " survey location.")
 #| output: asis
 
 Plover_points <- data %>%
@@ -89,21 +86,46 @@ Plover_points <- data %>%
 Plover_sf <- st_as_sf(Plover_points, coords = c("Avg_Lon", "Avg_Lat"), crs = 4326, agr = "constant") # Creates a sf object of the above DF
 
 ### Plots Sampling Map
-
 Site_map <- ggplot() +
-  geom_sf(data = boundary_sf, size = .5, color = "black",fill="grey90") + # Plots the Great Lakes Polygon shapefile
-  geom_sf(data = Plover_sf, size = 3, shape = 21, fill = "red3", color = "red1", stroke = 1.25, alpha = .5) +
-  geom_sf_text(data = boundary_sf, aes(label = name)) +
-  geom_text_repel(data = Plover_points, aes(x = Avg_Lon, y = Avg_Lat, label = Site), size = 3.1, point.padding = .75, max.overlaps = Inf) + 
-  coord_sf(xlim = c(-128.5, -117.2), ylim = c(46.85, 38.1), expand = FALSE) + # Zooms in on the specified area of the Great Lakes shapefile
+  geom_sf(data = boundary_sf, 
+          size = .5, 
+          color = "black",
+          fill="grey90") + # Plots the Great Lakes Polygon shapefile
+  geom_sf(data = Plover_sf, 
+          size = 3, 
+          shape = 21, 
+          fill = "red3", 
+          color = "red1", 
+          stroke = 1.25, 
+          alpha = .5) +
+  geom_sf_text(data = boundary_sf, 
+               aes(label = name)) +
+  geom_text_repel(data = Plover_points, 
+                  aes(x = Avg_Lon, y = Avg_Lat, label = Site), 
+                  size = 3.1, 
+                  point.padding = .75, 
+                  max.overlaps = Inf) + 
+  coord_sf(xlim = c(-128.5, -117.2), 
+           ylim = c(46.85, 38.1), 
+           expand = FALSE) + # Zooms in on the specified area of the Great Lakes shapefile
   #annotation_scale(location = "tr", style = "ticks", line_col = "black", text_col = "black") + # Applies a scale bar to the plot
-  theme(panel.background = element_rect(fill = "#c9e9fa"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.text.x=element_text(colour="black"), axis.text.y=element_text(colour="black"), axis.title.y = element_blank(), axis.title.x = element_blank(), axis.line = element_line(colour = "black"), panel.border = element_rect(colour = "black", fill=NA, size=.5)) # Gives the plot a plain standard appearance
+  theme(panel.background = element_rect(fill = "#c9e9fa"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        axis.text.x = element_text(colour="black"), 
+        axis.text.y = element_text(colour="black"), 
+        axis.title.y = element_blank(), 
+        axis.title.x = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, 
+                                    size = .5)) # Gives the plot a plain standard appearance
 
 Site_map # calls the map to be plotted
 ```
 
 ```{r}
-#| label: Figure Data Manipulation
+#| label: fig-data_manipulation
 
 ## Plover Counts Summary
 # Group by Survey Season and Site, and summarize Total Plover counts
@@ -131,8 +153,8 @@ The data on Western Snowy Plover total counts indicate notable seasonal trends. 
 Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% extract2(3)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% extract2(3)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% slice(which.max(Obs_Hour)) %>% extract2(1)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
 
 ```{r}
-#| label: Plover Observation Summary Table
-#| fig-cap: !expr paste0("Table 1. Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
+#| label: tbl-observation_summary
+#| fig-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
 
 # Create a gt table
 Obs_table <- Obs_data %>%
@@ -150,22 +172,33 @@ Obs_table
 ```
 
 ```{r}
-#| label: Plover Observation per Hour Plot
+#| label: fig-obs_per_hour
 #| include: true
-#| fig-cap: !expr paste0("Figure 2. Mean Monthly Western Snowy Plover observation rates (per hour) at the ", params$Site, " survey location.")
-
+#| fig-cap: !expr paste0("Mean Monthly Western Snowy Plover observation rates (per hour) at the ", params$Site, " survey location.")
 
 # Stacked bar chart with ggplot
 ### Restructure data for stacked barplot 
 catch_time_data <- data %>% 
   select(Site, Date, Duration_Hours, Males, Females, Juveniles) %>%
-  mutate(Mcpue=Males/Duration_Hours,Fcpue=Females/Duration_Hours, Jcpue=Juveniles/Duration_Hours ) %>%  
-  mutate(Month= month(Date, label=TRUE)) %>% 
-  select(Male = Mcpue, Female=Fcpue, Juvenile=Jcpue , Month) %>%
-  pivot_longer(cols = Male:Juvenile, names_to = "Maturity", values_to = "cpue") %>% 
-  group_by(Month, Maturity) %>% summarize(meanCPUE=mean(cpue), .groups = "keep")
+  mutate(Mcpue = Males/Duration_Hours,
+         Fcpue = Females/Duration_Hours, 
+         Jcpue = Juveniles/Duration_Hours) %>%  
+  mutate(Month = month(Date, label=TRUE)) %>% 
+  select(Male = Mcpue, 
+         Female = Fcpue, 
+         Juvenile = Jcpue, 
+         Month) %>%
+  pivot_longer(cols = Male:Juvenile, 
+               names_to = "Maturity", 
+               values_to = "cpue") %>% 
+  group_by(Month, Maturity) %>%
+  summarize(meanCPUE = mean(cpue), .groups = "keep")
+
 ### The Plot
-cpue_plot <- ggplot(catch_time_data,aes(x=Month, y=meanCPUE))+geom_col(aes(fill=Maturity),color = "black")+
+cpue_plot <- ggplot(catch_time_data,
+                    aes(x = Month, y = meanCPUE)) + 
+  geom_col(aes(fill = Maturity),
+           color = "black")+
   scale_fill_manual(values = c('#fc8d59','#ffffbf','#91bfdb' )) +
   labs(x = "", y = "Mean Observations per Hour") +
   theme(axis.text = element_text(color = "black", size = 10))
