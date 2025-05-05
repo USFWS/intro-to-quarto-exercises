@@ -1,21 +1,7 @@
-# Required packages
 
-## Create vector of packages
-requiredPackages <- c("tidyverse", 
-                      "readxl", 
-                      "gt", 
-                      "sf", 
-                      "ggrepel", 
-                      "knitr",
-                      "quarto")
-
-## Function to install and load any packages not installed
-ipak <- function(pkg) {
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-    install.packages(new.pkg, dependencies = TRUE)
-  sapply(pkg, require, character.only = TRUE)
-}
-
-## Load packages
-ipak(requiredPackages)
+required_packages <- c("tidyverse", "knitr", "officedown", "officer", "lubridate",
+                       "readxl", "janitor", "kableExtra", "flextable", "mapview", 
+                       "sf", "gt", "purrr", "english", "maps", "quarto", "usethis")
+new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
+update.packages(oldPkgs = required_packages)
