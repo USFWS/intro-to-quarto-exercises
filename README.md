@@ -11,15 +11,17 @@ This repository contains various exercises and examples that will guide students
 ## Getting started
 
 1. From FWS Apps-To-Go, install:
-    - R 4.4.2
-    - RStudio 2024.09.1
-2. Download the exercise materials:
+  - R 4.4.2
+  - RStudio 2024.09.1
+2. Open a new RStudio session. 
+3. Download the exercise materials. This function creates a new RStudio project called "intro-to-quarto-exercises-main".
 
 ``` r
-usethis::use_course("https://github.com/USFWS/intro-quarto-exercises/archive/refs/heads/main.zip")
+usethis::use_course("https://github.com/USFWS/intro-to-quarto-exercises/archive/refs/heads/main.zip")
 ```
 
-3. Open the exercise material RStudio project and install R package dependencies:
+4. Open this new RStudio project, if it's not already open. 
+5. Install the R package dependencies:
 
 ``` r
 source("install_packages.R")
