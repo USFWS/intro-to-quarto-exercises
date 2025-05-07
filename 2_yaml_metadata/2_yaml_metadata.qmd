@@ -1,0 +1,21 @@
+---
+title: Annual Western Snowy Plover Survey
+subtitle: This is my subtitle
+author: Jane Biologist
+Date: today
+format: html
+---
+
+# Introduction
+
+The western snowy plover (*Charadrius nivosus nivosus*), a small shorebird native to the Pacific coast, has been designated as a threatened species under the Endangered Species Act due to habitat loss, predation, and human disturbance. This species primarily inhabits sandy beaches and coastal dunes, where it nests in the intertidal zone and feeds on invertebrates. Characterized by its cryptic plumage, the western snowy plover is particularly vulnerable during the breeding season, which typically occurs from March to September. Observations conducted by the U.S. Fish and Wildlife Service along select beaches in the Pacific Northwest have provided critical data on population dynamics, nesting success, and habitat utilization, contributing to the understanding of the species' ecological needs and challenges.
+
+Annual observation surveys are essential for informing management strategies aimed at conserving the western snowy plover and its habitat. These surveys not only track population trends and breeding success but also assess the impact of environmental changes and human activities on their nesting sites. By analyzing the collected data, wildlife managers can implement targeted conservation measures, such as habitat protection, predator control, and public education initiatives, to mitigate threats to this endangered species. Continued monitoring and research are vital to ensuring the long-term survival of the western snowy plover along the Pacific Northwest coast.
+
+
+
+# Methods
+
+The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast. This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
+
+Observations were conducted during both summer and winter seasons to gather comprehensive information on the breeding and migratory populations of western snowy plovers at the survey sites. During the summer months, surveys focused on identifying nesting sites and assessing breeding success, while winter surveys aimed to document the abundance and distribution of migratory plovers that utilize these coastal environments.
