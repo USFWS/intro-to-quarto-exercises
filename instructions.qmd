@@ -81,7 +81,8 @@ Open `3-document_body.qmd` and make the following changes to the document:
 
 -   [ ] Create a new header named "My list"
 -   [ ] Make an ordered and unordered list
--   [ ] Insert an image
+-   [ ] Insert an image of the western snow plover below the "U.S. Fish and Wildlife Service" header
+    -   *Hint*: `image can be found in the images folder`
 
 ## Exercise 4: Code chunks
 

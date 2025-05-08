@@ -3,7 +3,7 @@ title: Annual Western Snowy Plover Survey
 subtitle: This is my subtitle
 author: Jane Biologist
 Date: today
-format: html
+format: docx
 ---
 
 # Introduction
