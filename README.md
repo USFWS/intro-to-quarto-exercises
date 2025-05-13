@@ -17,6 +17,7 @@ This repository contains various exercises and examples that will guide students
 3. Download the exercise materials. This function creates a new RStudio project called "intro-to-quarto-exercises-main".
 
 ``` r
+if (!require("usethis")) install.packages("usethis")
 usethis::use_course("https://github.com/USFWS/intro-to-quarto-exercises/archive/refs/heads/main.zip")
 ```
 
