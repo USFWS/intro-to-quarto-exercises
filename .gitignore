@@ -17,6 +17,4 @@
 # translation temp files
 po/*~
 # Preview files
-README.html
-DISCLAIMER.html
-NEWS.html
+*.html
