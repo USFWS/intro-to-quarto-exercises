@@ -11,41 +11,26 @@ params:
 ---
 
 ```{r}
-#| label: Package Install and Load
-#| output: false
-
-## Install and load packages
-
-# Create vector of packages
-
-requiredPackages <- c("tidyverse", "readxl", "gt", "sf", "ggrepel", "knitr", "magrittr")
-
-# Function to install and load any packages not installed
-
-ipak <- function(pkg){
-  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-  if (length(new.pkg))
-  install.packages(new.pkg, dependencies = TRUE)
-  sapply(pkg, require, character.only = TRUE)
-}
-
-# Load packages
-
-ipak(requiredPackages)
-```
-
-```{r}
 #| label: Data Import
 #| output: false
 
-# Read excel data from the Projects "Data" folder. 
+# Load libraries
+library(tidyverse)
+library(sf)
+library(magrittr)
+library(ggrepel)
+library(flextable)
 
-data <- read_excel("./data/Western_Snowy_Plover_Window_Survey_dataset.xlsx") %>% # Read in our downloaded plover dataset.
+
+# Read excel data from the project's "data" folder. 
+data <-  read.csv("./data/Western_Snowy_Plover_Window_Survey_dataset.csv",
+                  header = TRUE,
+                  stringsAsFactors = FALSE) %>% 
+  
   filter(Site == params$Site) # Filter dataset by survey site
-head(data) # Show the first few rows of data.
 
-# Read shapefile data from the Projects "Data" folder. 
 
+# Read shapefile data from the Projects "data" folder. 
 boundary_sf <- st_read(dsn = "./data/us-state-boundaries")
 ```
 
@@ -76,21 +61,30 @@ Observations were conducted during both summer and winter seasons to gather comp
 #| fig-cap: !expr paste0("Map of Western Snowy Plover survey locations at the ", params$Site, " survey location.")
 #| output: asis
 
+
+# Summarise data
 Plover_points <- data %>%
+  
   group_by(Site) %>% # Groups records by Area
-  summarise(Avg_Lat = mean(y, na.rm = TRUE), Avg_Lon = mean(x, na.rm = TRUE)) # Creates averages of geometry for each Area
+  
+  summarise(Avg_Lat = mean(y, na.rm = TRUE),
+            Avg_Lon = mean(x, na.rm = TRUE)) # Creates averages of geometry for each Area
 
-### Converts DF into sf object
-# Summary: This line of code takes the dataframe that was created above and turns it into a sf object that can be used for plotting on the map.
 
-Plover_sf <- st_as_sf(Plover_points, coords = c("Avg_Lon", "Avg_Lat"), crs = 4326, agr = "constant") # Creates a sf object of the above DF
+# Convert DF into sf object
+Plover_sf <- st_as_sf(Plover_points, 
+                      coords = c("Avg_Lon", "Avg_Lat"), 
+                      crs = 4326, agr = "constant") # Creates a sf object of the above DF
 
-### Plots Sampling Map
+
+# Create sampling map
 Site_map <- ggplot() +
+  
   geom_sf(data = boundary_sf, 
           size = .5, 
           color = "black",
           fill="grey90") + # Plots the Great Lakes Polygon shapefile
+  
   geom_sf(data = Plover_sf, 
           size = 3, 
           shape = 21, 
@@ -98,17 +92,20 @@ Site_map <- ggplot() +
           color = "red1", 
           stroke = 1.25, 
           alpha = .5) +
+  
   geom_sf_text(data = boundary_sf, 
                aes(label = name)) +
+  
   geom_text_repel(data = Plover_points, 
                   aes(x = Avg_Lon, y = Avg_Lat, label = Site), 
                   size = 3.1, 
                   point.padding = .75, 
                   max.overlaps = Inf) + 
+  
   coord_sf(xlim = c(-128.5, -117.2), 
            ylim = c(46.85, 38.1), 
            expand = FALSE) + # Zooms in on the specified area of the Great Lakes shapefile
-  #annotation_scale(location = "tr", style = "ticks", line_col = "black", text_col = "black") + # Applies a scale bar to the plot
+  
   theme(panel.background = element_rect(fill = "#c9e9fa"), 
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
@@ -121,28 +118,35 @@ Site_map <- ggplot() +
                                     fill = NA, 
                                     size = .5)) # Gives the plot a plain standard appearance
 
-Site_map # calls the map to be plotted
+# Print map
+Site_map
 ```
 
 ```{r}
 #| label: fig-data_manipulation
 
-## Plover Counts Summary
-# Group by Survey Season and Site, and summarize Total Plover counts
+
+# Total plover counts by survey season and site
 Obs_data <- data %>%
+  
   group_by(Survey_Season, Site) %>%
+  
   summarise(Total_Males = sum(Males),
             Total_Females = sum(Females),
             Total_Juveniles = sum(Juveniles),
             Total_Count = sum(Total),
             .groups = 'drop') %>%
+  
   arrange(Site)  # Arrange by Site
 
-## Plover Observations per Hour
-# Group by Survey Season and Site, and summarize Total Plover counts by duration (hours)
+
+# Total plover observations per hour by survey season and site
 Effort_data <- data %>%
+  
   group_by(Survey_Season, Site) %>%
+  
   summarise(Obs_Hour = round(sum(Total)/sum(Duration_Hours), 2)) %>%
+  
   arrange(Site)  # Arrange by Site
 ```
 
@@ -156,53 +160,69 @@ Furthermore, observational plover counts per hour reveal significant seasonal tr
 #| label: tbl-observation_summary
 #| fig-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
 
-# Create a gt table
+# Create a flextable
 Obs_table <- Obs_data %>%
-  gt() %>%
-  cols_label(
-    Survey_Season = "Survey Season",
-    Total_Males = "Total Males",
-    Total_Females = "Total Females",
-    Total_Juveniles = "Total Juveniles",
-    Total_Count = "Total Count"
-  )
+  
+  rename("Survey Season" = Survey_Season,
+    "Total Males" = Total_Males,
+    "Total Females" = Total_Females,
+    "Total Juveniles" = Total_Juveniles,
+    "Total Count" = Total_Count) %>%
+  
+  flextable::flextable(.,
+                       cwidth = 0.85) 
+
 
 # Print the table
 Obs_table
 ```
 
 ```{r}
-#| label: fig-obs_per_hour
 #| include: true
 #| fig-cap: !expr paste0("Mean Monthly Western Snowy Plover observation rates (per hour) at the ", params$Site, " survey location.")
 
-# Stacked bar chart with ggplot
-### Restructure data for stacked barplot 
-catch_time_data <- data %>% 
+
+# Restructure data for stacked barplot
+catch_time_data <- data %>%
+  
   select(Site, Date, Duration_Hours, Males, Females, Juveniles) %>%
-  mutate(Mcpue = Males/Duration_Hours,
-         Fcpue = Females/Duration_Hours, 
-         Jcpue = Juveniles/Duration_Hours) %>%  
-  mutate(Month = month(Date, label=TRUE)) %>% 
-  select(Male = Mcpue, 
-         Female = Fcpue, 
-         Juvenile = Jcpue, 
+  
+  mutate(
+    Mcpue = Males / Duration_Hours,
+    Fcpue = Females / Duration_Hours,
+    Jcpue = Juveniles / Duration_Hours
+  ) %>%
+  
+  mutate(Month = month(Date, label = TRUE)) %>%
+  
+  select(Male = Mcpue,
+         Female = Fcpue,
+         Juvenile = Jcpue,
          Month) %>%
-  pivot_longer(cols = Male:Juvenile, 
-               names_to = "Maturity", 
-               values_to = "cpue") %>% 
+  
+  pivot_longer(cols = Male:Juvenile,
+               names_to = "Maturity",
+               values_to = "cpue") %>%
+  
   group_by(Month, Maturity) %>%
+  
   summarize(meanCPUE = mean(cpue), .groups = "keep")
 
-### The Plot
-cpue_plot <- ggplot(catch_time_data,
-                    aes(x = Month, y = meanCPUE)) + 
-  geom_col(aes(fill = Maturity),
-           color = "black")+
-  scale_fill_manual(values = c('#fc8d59','#ffffbf','#91bfdb' )) +
+
+# Create plot
+cpue_plot <- ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
+  
+  geom_col(aes(fill = Maturity), color = "black") +
+  
+  scale_fill_manual(values = c('#fc8d59', '#ffffbf', '#91bfdb')) +
+  
   labs(x = "", y = "Mean Observations per Hour") +
+  
   theme(axis.text = element_text(color = "black", size = 10))
 
+
+
+# Print plot
 cpue_plot
 ```
 
