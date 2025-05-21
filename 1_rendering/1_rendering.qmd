@@ -17,7 +17,7 @@ When you click the **Render** button a document will be generated that includes 
 1 + 1
 ```
 
-You can add options to executable code like this 
+You can add options to executable code like this
 
 ```{r}
 #| echo: false
@@ -30,7 +30,7 @@ You can also run inline code. For example, we counted a total of `r 2+2` snowy p
 
 You can create figures using code like @fig-my_plot:
 
-``` {r}
+```{r}
 #| echo: false
 #| label: fig-my_plot
 #| fig-cap: "My really neat plot!"
