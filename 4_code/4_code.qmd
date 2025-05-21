@@ -42,11 +42,11 @@ boundary_sf <- st_read(dsn = "./data/us-state-boundaries")
 
 ##### Survey Summary
 
-A total of `r nrow(data)` individual western snowy plover (**Charadrius nivosus nivosus**) surveys were conducted at `r params$Site` during the annual U.S. Fish and Wildlife Service seasonal survey. In total, `r sum(data$Total)` plovers were observed during the survey over the course of `r round(sum(data$Duration_Hours), 2)` observational hours.
+A total of `r nrow(data)` individual western snowy plover (*Charadrius nivosus nivosus*) surveys were conducted at `r params$Site` during the annual U.S. Fish and Wildlife Service seasonal survey. In total, `r sum(data$Total)` plovers were observed during the survey over the course of `r round(sum(data$Duration_Hours), 2)` observational hours.
 
 ##### Introduction
 
-The western snowy plover (**Charadrius nivosus nivosus**), a small shorebird native to the Pacific coast, has been designated as a threatened species under the Endangered Species Act due to habitat loss, predation, and human disturbance. This species primarily inhabits sandy beaches and coastal dunes, where it nests in the intertidal zone and feeds on invertebrates. Characterized by its cryptic plumage, the western snowy plover is particularly vulnerable during the breeding season, which typically occurs from March to September. Observations conducted by the U.S. Fish and Wildlife Service along select beaches in the Pacific Northwest have provided critical data on population dynamics, nesting success, and habitat utilization, contributing to the understanding of the species' ecological needs and challenges.
+The western snowy plover (*Charadrius nivosus nivosus*), a small shorebird native to the Pacific coast, has been designated as a threatened species under the Endangered Species Act due to habitat loss, predation, and human disturbance. This species primarily inhabits sandy beaches and coastal dunes, where it nests in the intertidal zone and feeds on invertebrates. Characterized by its cryptic plumage, the western snowy plover is particularly vulnerable during the breeding season, which typically occurs from March to September. Observations conducted by the U.S. Fish and Wildlife Service along select beaches in the Pacific Northwest have provided critical data on population dynamics, nesting success, and habitat utilization, contributing to the understanding of the species' ecological needs and challenges.
 
 Annual observation surveys are essential for informing management strategies aimed at conserving the western snowy plover and its habitat. These surveys not only track population trends and breeding success but also assess the impact of environmental changes and human activities on their nesting sites. By analyzing the collected data, wildlife managers can implement targeted conservation measures, such as habitat protection, predator control, and public education initiatives, to mitigate threats to this endangered species. Continued monitoring and research are vital to ensuring the long-term survival of the western snowy plover along the Pacific Northwest coast.
 
@@ -119,8 +119,9 @@ ggplot() +
                                     linewidth = .5)) # Gives the plot a plain standard appearance
 ```
 
+  
 ```{r}
-#| label: fig-data-manipulation
+#| label: data-manipulation
 
 
 # Total plover counts by survey season and site
@@ -151,11 +152,9 @@ Effort_data <- data %>%
 
 The data on Western Snowy Plover total counts indicate notable seasonal trends. In the summer, `r params$Site` had a total observational count of `r Obs_data %>% filter(Survey_Season == "Summer") %>% pull(Total_Count)` plovers (@tbl-observation-summary). The winter survey resulted in a total observational count of `r Obs_data %>% filter(Survey_Season == "Winter") %>% pull(Total_Count)` plovers. Regardless of season, these results show usage by plovers during both seasons and highlights the migratory behavior of the plovers and underscores the importance of these habitats for both breeding and wintering populations.
 
-Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) |> pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
-
 ```{r}
 #| label: tbl-observation-summary
-#| fig-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
+#| tbl-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
 
 # Create and print a flextable
 Obs_data %>%
@@ -170,7 +169,10 @@ Obs_data %>%
                        cwidth = 0.85) 
 ```
 
+Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) |> pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
+
 ```{r}
+#| label: fig-obs-rate
 #| include: true
 #| fig-cap: !expr paste0("Mean Monthly Western Snowy Plover observation rates (per hour) at the ", params$Site, " survey location.")
 
