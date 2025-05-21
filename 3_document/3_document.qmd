@@ -10,7 +10,7 @@ params:
 ---
 
 ```{r}
-#| label: Data Import
+#| label: data-import
 #| output: false
 #| echo: false
 

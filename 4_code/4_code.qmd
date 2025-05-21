@@ -11,7 +11,7 @@ params:
 ---
 
 ```{r}
-#| label: Data Import
+#| label: data-import
 #| output: false
 
 # Load libraries
@@ -52,12 +52,12 @@ Annual observation surveys are essential for informing management strategies aim
 
 ##### Methods
 
-The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast (@fig-site_map). This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
+The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast (@fig-site-map). This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
 
 Observations were conducted during both summer and winter seasons to gather comprehensive information on the breeding and migratory populations of western snowy plovers at the survey sites. During the summer months, surveys focused on identifying nesting sites and assessing breeding success, while winter surveys aimed to document the abundance and distribution of migratory plovers that utilize these coastal environments.
 
 ```{r}
-#| label: fig-site_map
+#| label: fig-site-map
 #| fig-cap: !expr paste0("Map of Western Snowy Plover survey locations at the ", params$Site, " survey location.")
 #| output: asis
 
@@ -77,8 +77,8 @@ Plover_sf <- st_as_sf(Plover_points,
                       crs = 4326, agr = "constant") # Creates a sf object of the above DF
 
 
-# Create sampling map
-Site_map <- ggplot() +
+# Create and print sampling map
+ggplot() +
   
   geom_sf(data = boundary_sf, 
           size = .5, 
@@ -116,14 +116,11 @@ Site_map <- ggplot() +
         axis.line = element_line(colour = "black"), 
         panel.border = element_rect(colour = "black", 
                                     fill = NA, 
-                                    size = .5)) # Gives the plot a plain standard appearance
-
-# Print map
-Site_map
+                                    linewidth = .5)) # Gives the plot a plain standard appearance
 ```
 
 ```{r}
-#| label: fig-data_manipulation
+#| label: fig-data-manipulation
 
 
 # Total plover counts by survey season and site
@@ -152,16 +149,16 @@ Effort_data <- data %>%
 
 ##### Results
 
-The data on Western Snowy Plover total counts indicate notable seasonal trends. In the summer, `r params$Site` had a total observational count of `r Obs_data %>% filter(Survey_Season == "Summer") %>% extract2(6)` plovers (table 1). The winter survey resuted in a total observational count of `r Obs_data %>% filter(Survey_Season == "Winter") %>% extract2(6)` plovers. Regardless of season, these results show usage by plovers during both seaons and highlights the migratory behavior of the plovers and underscores the importance of these habitats for both breeding and wintering populations.
+The data on Western Snowy Plover total counts indicate notable seasonal trends. In the summer, `r params$Site` had a total observational count of `r Obs_data %>% filter(Survey_Season == "Summer") %>% pull(Total_Count)` plovers (@tbl-observation-summary). The winter survey resulted in a total observational count of `r Obs_data %>% filter(Survey_Season == "Winter") %>% pull(Total_Count)` plovers. Regardless of season, these results show usage by plovers during both seaons and highlights the migratory behavior of the plovers and underscores the importance of these habitats for both breeding and wintering populations.
 
-Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% extract2(3)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% extract2(3)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% slice(which.max(Obs_Hour)) %>% extract2(1)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
+Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) |> pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
 
 ```{r}
-#| label: tbl-observation_summary
+#| label: tbl-observation-summary
 #| fig-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
 
-# Create a flextable
-Obs_table <- Obs_data %>%
+# Create and print a flextable
+Obs_data %>%
   
   rename("Survey Season" = Survey_Season,
     "Total Males" = Total_Males,
@@ -171,10 +168,6 @@ Obs_table <- Obs_data %>%
   
   flextable::flextable(.,
                        cwidth = 0.85) 
-
-
-# Print the table
-Obs_table
 ```
 
 ```{r}
@@ -209,8 +202,8 @@ catch_time_data <- data %>%
   summarize(meanCPUE = mean(cpue), .groups = "keep")
 
 
-# Create plot
-cpue_plot <- ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
+# Create and print CPUE plot
+ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
   
   geom_col(aes(fill = Maturity), color = "black") +
   
@@ -219,11 +212,6 @@ cpue_plot <- ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
   labs(x = "", y = "Mean Observations per Hour") +
   
   theme(axis.text = element_text(color = "black", size = 10))
-
-
-
-# Print plot
-cpue_plot
 ```
 
 ##### Discussion
