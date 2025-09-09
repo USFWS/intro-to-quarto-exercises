@@ -209,9 +209,7 @@ ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
   scale_fill_manual(values = c('#fc8d59', '#ffffbf', '#91bfdb')) +
   
   labs(x = "", y = "Mean Observations per Hour") +
-  
-  theme_bw() + 
-  
+
   theme(axis.text = element_text(color = "black", size = 10))
 ```
 
