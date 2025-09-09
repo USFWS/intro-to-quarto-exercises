@@ -21,7 +21,8 @@ library(tidyverse)
 library(sf)
 library(magrittr)
 library(ggrepel)
-library(flextable)
+library(knitr)
+library(kableExtra)
 
 
 # Read excel data from the project's "data" folder. 
@@ -54,7 +55,7 @@ Observations were conducted during both summer and winter seasons to gather comp
 
 ```{r}
 #| label: fig-site-map
-#| fig-cap: !expr paste0("Map of Western Snowy Plover survey locations at the ", params$Site, " survey location.")
+#| fig-cap: "Map of Western Snowy Plover survey locations"
 #| output: asis
 
 
@@ -115,7 +116,6 @@ ggplot() +
                                     linewidth = .5)) # Gives the plot a plain standard appearance
 ```
 
-  
 ```{r}
 #| label: data-manipulation
 
@@ -150,26 +150,28 @@ The data on Western Snowy Plover total counts indicate notable seasonal trends. 
 
 ```{r}
 #| label: tbl-observation-summary
-#| tbl-cap: !expr paste0("Seasonal Western Snowy Plover observational counts at the ", params$Site, " survey location.")
 
 # Create and print a flextable
-Obs_data %>%
+table_data <- Obs_data %>%
   
   rename("Survey Season" = Survey_Season,
     "Total Males" = Total_Males,
     "Total Females" = Total_Females,
     "Total Juveniles" = Total_Juveniles,
-    "Total Count" = Total_Count) %>%
+    "Total Count" = Total_Count)
   
-  flextable::flextable(.,
-                       cwidth = 0.85) 
+kable(table_data, 
+      caption = paste0("Seasonal Western Snowy Plover observational counts at the ", 
+                       params$Site, 
+                       " survey location."), 
+      align = "c")
 ```
 
-Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) |> pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
+Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) %>% pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
 
 ```{r}
 #| include: true
-#| fig-cap: !expr paste0("Snowy Plover observation rates (per hour) at the ", params$Site, " survey location.")
+#| fig-cap: "Snowy Plover observation rates (per hour).")
 
 
 # Restructure data for stacked barplot
@@ -207,6 +209,8 @@ ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
   scale_fill_manual(values = c('#fc8d59', '#ffffbf', '#91bfdb')) +
   
   labs(x = "", y = "Mean Observations per Hour") +
+  
+  theme_bw() + 
   
   theme(axis.text = element_text(color = "black", size = 10))
 ```
