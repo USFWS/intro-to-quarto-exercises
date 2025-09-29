@@ -150,6 +150,7 @@ The data on Western Snowy Plover total counts indicate notable seasonal trends. 
 
 ```{r}
 #| label: tbl-observation-summary
+#| include: False
 
 # Create and print a flextable
 table_data <- Obs_data %>%
@@ -171,7 +172,8 @@ Furthermore, observational plover counts per hour reveal significant seasonal tr
 
 ```{r}
 #| include: true
-#| fig-cap: "Western Snowy Plover observation rates (per hour)."
+#| label: fig-obs-per-hour
+#| fig-cap: "Mean Monthly Western Snowy Plover observation rates (per hour)."
 
 
 # Restructure data for stacked barplot
@@ -210,7 +212,9 @@ ggplot(catch_time_data, aes(x = Month, y = meanCPUE)) +
   
   labs(x = "", y = "Mean Observations per Hour") +
 
-  theme(axis.text = element_text(color = "black", size = 10))
+  theme(axis.text = element_text(color = "black", size = 10)) +
+  
+  theme_bw()
 ```
 
 # Discussion

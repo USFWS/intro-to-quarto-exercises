@@ -1,0 +1,86 @@
+---
+title: Annual Western Snowy Plover Survey
+author: U.S. Fish and Wildlife Service
+Date: today
+format: 
+  docx:
+   reference-doc: ./templates/MS_Style.docx
+params:
+  Site: "Agate Beach"
+---
+
+```{r}
+#| label: data-import
+#| output: false
+#| echo: false
+
+library(dplyr)
+library(magrittr)
+
+# Read excel data from the project's "data" folder. 
+data <-  read.csv("./data/Western_Snowy_Plover_Window_Survey_dataset.csv",
+                  header = TRUE,
+                  stringsAsFactors = FALSE) %>% 
+  
+  filter(Site == params$Site) # Filter dataset by survey site
+
+
+## Plover Counts Summary
+# Group by Survey Season and Site, and summarize Total Plover counts
+Obs_data <- data %>%
+  
+  group_by(Survey_Season, Site) %>%
+  
+  summarise(Total_Males = sum(Males),
+            Total_Females = sum(Females),
+            Total_Juveniles = sum(Juveniles),
+            Total_Count = sum(Total),
+            .groups = 'drop') %>%
+  
+  arrange(Site)  # Arrange by Site
+
+
+## Plover Observations per Hour
+Effort_data <- data %>%
+  
+  group_by(Survey_Season, Site) %>%
+  
+  summarise(Obs_Hour = round(sum(Total)/sum(Duration_Hours), 2)) %>%
+  
+  arrange(Site)  # Arrange by Site
+```
+
+![](images/western_snowy_plover.jpg)
+
+# Introduction
+
+The [western snowy plover](https://www.fws.gov/species/western-snowy-plover-charadrius-nivosus-nivosus) (*Charadrius nivosus nivosus*), a small shorebird native to the Pacific coast, has been designated as a threatened species under the Endangered Species Act due to habitat loss, predation, and human disturbance. This species primarily inhabits sandy beaches and coastal dunes, where it nests in the intertidal zone and feeds on invertebrates. Characterized by its cryptic plumage, the western snowy plover is particularly vulnerable during the breeding season, which typically occurs from March to September. Observations conducted by the U.S. Fish and Wildlife Service along select beaches in the Pacific Northwest have provided critical data on population dynamics, nesting success, and habitat utilization, contributing to the understanding of the species' ecological needs and challenges.
+
+Annual observation surveys are essential for informing management strategies aimed at conserving the western snowy plover and its habitat. These surveys not only track population trends and breeding success but also assess the impact of environmental changes and human activities on their nesting sites. By analyzing the collected data, wildlife managers can implement targeted conservation measures, such as habitat protection, predator control, and public education initiatives, to mitigate threats to this endangered species. Continued monitoring and research are vital to ensuring the long-term survival of the western snowy plover along the Pacific Northwest coast.
+
+# Methods
+
+The annual surveys of western snowy plovers employed systematic observational methods to ensure accurate counts and assessments of the population. Observers conducted visual counts using binoculars while walking along designated survey areas, which included sandy beaches and the lower portions of rivers and tributaries located in close proximity to the coast. This approach allowed for a thorough examination of the habitat where snowy plovers are typically found, enhancing the likelihood of detecting individuals and nests. To maintain consistency and accuracy, survey routes were predetermined, and observers followed established protocols to minimize disturbance to the birds while still capturing essential data.
+
+Observations were conducted during both summer and winter seasons to gather comprehensive information on the breeding and migratory populations of western snowy plovers at the survey sites. During the summer months, surveys focused on identifying nesting sites and assessing breeding success, while winter surveys aimed to document the abundance and distribution of migratory plovers that utilize these coastal environments.
+
+# Results
+
+The data on Western Snowy Plover total counts indicate notable seasonal trends. In the summer, `r params$Site` had a total observational count of `r Obs_data %>% filter(Survey_Season == "Summer") %>% pull(Total_Count)` plovers. The winter survey resulted in a total observational count of `r Obs_data %>% filter(Survey_Season == "Winter") %>% pull(Total_Count)` plovers. Regardless of season, these results show usage by plovers during both seasons and highlights the migratory behavior of the plovers and underscores the importance of these habitats for both breeding and wintering populations.
+
+Furthermore, observational plover counts per hour reveal significant seasonal trends across the site. In the summer, `r params$Site` had an observation rate of `r Effort_data %>% filter(Survey_Season == "Summer") %>% pull(Obs_Hour)` plovers per hour. The winter survey saw an observation rate of `r Effort_data %>% filter(Survey_Season == "Winter") %>% pull(Obs_Hour)` plovers per hour. Although observation rates were highest in the `r Effort_data %>% ungroup() %>% filter(Obs_Hour == max(Obs_Hour)) %>% pull(Survey_Season)` season, seasonal monitoring remains important to understand the dynamics of plover populations in these habitats.
+
+# My List
+
+1. item 1
+2. item 2
+3. item 3
+
+- item 1
+- item 2
+- item 3
+
+
+# Discussion
+
+The results from the observational and total count data of Western Snowy Plovers indicate significant seasonal and site-specific trends that are crucial for understanding the species' population dynamics. The higher summer counts and observational rates at Leadbetter Point and Agate Beach suggest these locations are vital breeding habitats, supporting robust populations during the nesting season. The substantial presence of juveniles at these sites further emphasizes their importance for reproductive success. Conversely, the notable decline in both total counts and hourly observations during the winter months across all sites highlights the migratory nature of the plovers and their reduced visibility during this period. Such seasonal variations in abundance and behavior reinforce the need for targeted conservation efforts during critical breeding times, as well as continued monitoring throughout the year to address the challenges posed by habitat loss and human disturbances. These findings underscore the importance of maintaining and enhancing habitat quality at key sites to support the long-term survival of the western snowy plover in the Pacific Northwest.
