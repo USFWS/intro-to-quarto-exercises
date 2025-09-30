@@ -1,5 +1,5 @@
 install_packages <- function() {
-  required_packages <- c("tidyverse", "knitr", "ggrepel", "flextable", 
+  required_packages <- c("tidyverse", "knitr", "ggrepel", "kableExtra", 
                          "sf", "quarto", "tinytex")
   new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
   if(length(new_packages)) install.packages(new_packages)
